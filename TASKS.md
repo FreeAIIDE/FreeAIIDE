@@ -29,8 +29,8 @@ Acceptance criteria:
 Acceptance criteria:
 
 - [x] Extension compiles.
-- [ ] Extension Development Host launches.
-- [ ] Command is visible in Command Palette.
+- [x] Extension Development Host launches.
+- [x] Command is visible in Command Palette.
 
 ## Phase 2 — Chat Sidebar
 
@@ -174,14 +174,14 @@ Acceptance criteria:
 - [x] Add `.vscodeignore`.
 - [x] Add package script.
 - [x] Build `.vsix`.
-- [ ] Install locally.
-- [ ] Verify activation.
+- [x] Install locally.
+- [x] Verify activation.
 
 Acceptance criteria:
 
 - [x] `.vsix` is generated.
-- [ ] Extension installs locally.
-- [ ] Extension works after installation.
+- [x] Extension installs locally.
+- [x] Extension works after installation.
 
 ## Phase 12 — Inline Completion
 
