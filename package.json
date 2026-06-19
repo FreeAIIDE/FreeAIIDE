@@ -1,0 +1,162 @@
+{
+  "name": "freeai-ide",
+  "displayName": "FreeAI IDE",
+  "description": "A local-first AI coding assistant for VS Code and future Code - OSS forks.",
+  "version": "0.0.1",
+  "publisher": "freeai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/freeai/freeai-ide.git"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning",
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onCommand:freeai.openChat",
+    "onView:freeai.chatView"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "freeai.openChat",
+        "title": "FreeAI: Open Chat"
+      },
+      {
+        "command": "freeai.setApiKey",
+        "title": "FreeAI: Set API Key"
+      },
+      {
+        "command": "freeai.clearApiKey",
+        "title": "FreeAI: Clear API Key"
+      },
+      {
+        "command": "freeai.selectProvider",
+        "title": "FreeAI: Select Provider"
+      },
+      {
+        "command": "freeai.setModel",
+        "title": "FreeAI: Set Model"
+      },
+      {
+        "command": "freeai.testProvider",
+        "title": "FreeAI: Test Provider"
+      },
+      {
+        "command": "freeai.toggleAutocomplete",
+        "title": "FreeAI: Toggle Autocomplete"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "freeai",
+          "title": "FreeAI",
+          "icon": "resources/freeai.svg"
+        }
+      ]
+    },
+    "views": {
+      "freeai": [
+        {
+          "id": "freeai.chatView",
+          "name": "Chat"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "FreeAI IDE",
+      "properties": {
+        "freeai.provider": {
+          "type": "string",
+          "default": "ollama",
+          "enum": [
+            "ollama",
+            "openai-compatible"
+          ],
+          "description": "The AI provider to use. Ollama is local-first and is the default."
+        },
+        "freeai.ollama.baseUrl": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Base URL for the local Ollama server."
+        },
+        "freeai.ollama.model": {
+          "type": "string",
+          "default": "qwen2.5-coder:7b",
+          "description": "Ollama model to use."
+        },
+        "freeai.openai.baseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI-compatible API base URL."
+        },
+        "freeai.openai.model": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI-compatible model name."
+        },
+        "freeai.context.maxChars": {
+          "type": "number",
+          "default": 24000,
+          "minimum": 4000,
+          "description": "Maximum number of characters to include in model context."
+        },
+        "freeai.tools.maxToolCalls": {
+          "type": "number",
+          "default": 8,
+          "minimum": 1,
+          "maximum": 25,
+          "description": "Maximum number of tool calls per agent turn."
+        },
+        "freeai.files.excludeGlobs": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/.git/**",
+            "**/dist/**",
+            "**/build/**",
+            "**/out/**",
+            "**/.next/**",
+            "**/coverage/**"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "File globs to exclude from AI tools."
+        },
+        "freeai.autocomplete.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable AI inline autocomplete."
+        },
+        "freeai.autocomplete.maxChars": {
+          "type": "number",
+          "default": 6000,
+          "minimum": 1000,
+          "description": "Maximum context size for inline completion."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "echo \"Tests are not implemented yet\"",
+    "package": "vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^2.15.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,31 @@
+# Source maps and TypeScript source may be excluded for production packages
+src/**
+test/**
+.vscode-test/**
+coverage/**
+
+# Dependencies handled by npm package rules
+node_modules/**/.cache/**
+
+# Repo metadata
+.git/**
+.github/**
+.gitignore
+
+# Local files
+.env
+.env.*
+*.log
+.DS_Store
+
+# Development docs that do not need to ship
+TASKS.md
+ROADMAP.md
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Build config not needed at runtime
+tsconfig.json
+.eslintrc.json
+.prettierrc
+.vscode/**
