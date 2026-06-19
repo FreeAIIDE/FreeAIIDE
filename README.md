@@ -60,9 +60,10 @@ http://localhost:11434
   - `propose_edit`
   - `apply_edit`
 - Agent loop with JSON tool-call fallback.
-- User-approved patch workflow.
-- Optional OpenAI-compatible provider.
-- Inline completion.
+- User-approved patch workflow with diff preview.
+- Optional OpenAI-compatible provider with SecretStorage API keys.
+- Cloud context warning before external provider use.
+- Inline completion with timeout guard.
 - `.vsix` packaging.
 - Future Code - OSS fork integration.
 
@@ -97,6 +98,42 @@ Package extension:
 ```bash
 npm run package
 ```
+
+Launch the Extension Development Host from VS Code:
+
+```text
+Run and Debug → Run FreeAI Extension
+```
+
+Useful commands:
+
+```text
+FreeAI: Open Chat
+FreeAI: Set API Key
+FreeAI: Clear API Key
+FreeAI: Select Provider
+FreeAI: Set Model
+FreeAI: Test Provider
+FreeAI: Toggle Autocomplete
+```
+
+## Inline Completion
+
+Inline completion is disabled by default.
+
+Enable it with:
+
+```json
+{
+  "freeai.autocomplete.enabled": true
+}
+```
+
+The completion provider uses bounded prefix/suffix context and aborts after `freeai.autocomplete.timeoutMs`.
+
+## Code - OSS Fork
+
+The standalone IDE plan is documented in [`CODE_OSS_FORK_PLAN.md`](./CODE_OSS_FORK_PLAN.md).
 
 ## Security Model
 

@@ -2,8 +2,20 @@ import * as vscode from 'vscode';
 import { resolveWorkspacePath } from '../security/workspacePath';
 import { EditProposal } from './types';
 
-export class PatchManager {
+const PROPOSED_SCHEME = 'freeai-proposed';
+const EMPTY_SCHEME = 'freeai-empty';
+
+export class PatchManager implements vscode.TextDocumentContentProvider, vscode.Disposable {
   private readonly proposals = new Map<string, EditProposal>();
+  private readonly changeEmitter = new vscode.EventEmitter<vscode.Uri>();
+  readonly onDidChange = this.changeEmitter.event;
+
+  constructor(private readonly context: vscode.ExtensionContext) {
+    context.subscriptions.push(
+      vscode.workspace.registerTextDocumentContentProvider(PROPOSED_SCHEME, this),
+      vscode.workspace.registerTextDocumentContentProvider(EMPTY_SCHEME, this)
+    );
+  }
 
   async propose(path: string, summary: string, replacement: string): Promise<EditProposal> {
     const resolved = resolveWorkspacePath(path, { allowMissing: true });
@@ -32,6 +44,37 @@ export class PatchManager {
     return proposal;
   }
 
+  async showDiff(id: string): Promise<void> {
+    const proposal = this.proposals.get(id);
+    if (!proposal) {
+      throw new Error('Unknown edit proposal.');
+    }
+
+    const resolved = resolveWorkspacePath(proposal.path, { allowMissing: true });
+    const proposedUri = vscode.Uri.from({
+      scheme: PROPOSED_SCHEME,
+      path: `/${proposal.id}/${proposal.path}`
+    });
+    this.changeEmitter.fire(proposedUri);
+
+    let originalUri = resolved.uri;
+    try {
+      await vscode.workspace.fs.stat(resolved.uri);
+    } catch {
+      originalUri = vscode.Uri.from({
+        scheme: EMPTY_SCHEME,
+        path: `/${proposal.id}/${proposal.path}`
+      });
+    }
+
+    await vscode.commands.executeCommand(
+      'vscode.diff',
+      originalUri,
+      proposedUri,
+      `FreeAI Proposal: ${proposal.path}`
+    );
+  }
+
   async apply(id: string): Promise<void> {
     const proposal = this.proposals.get(id);
     if (!proposal) {
@@ -56,5 +99,17 @@ export class PatchManager {
     }
     await document.save();
     this.proposals.delete(id);
+  }
+
+  provideTextDocumentContent(uri: vscode.Uri): string {
+    if (uri.scheme === EMPTY_SCHEME) {
+      return '';
+    }
+    const proposalId = uri.path.split('/').filter(Boolean)[0];
+    return this.proposals.get(proposalId)?.replacement ?? '';
+  }
+
+  dispose(): void {
+    this.changeEmitter.dispose();
   }
 }

@@ -6,7 +6,7 @@
   "publisher": "freeai",
   "repository": {
     "type": "git",
-    "url": "https://github.com/freeai/freeai-ide.git"
+    "url": "https://github.com/FreeAIIDE/FreeAIIDE.git"
   },
   "engines": {
     "vscode": "^1.90.0"
@@ -107,12 +107,23 @@
           "minimum": 4000,
           "description": "Maximum number of characters to include in model context."
         },
+        "freeai.context.warnBeforeCloud": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn before sending workspace context to an OpenAI-compatible cloud provider."
+        },
         "freeai.tools.maxToolCalls": {
           "type": "number",
           "default": 8,
           "minimum": 1,
           "maximum": 25,
           "description": "Maximum number of tool calls per agent turn."
+        },
+        "freeai.files.maxReadBytes": {
+          "type": "number",
+          "default": 262144,
+          "minimum": 4096,
+          "description": "Maximum file size that AI tools may read."
         },
         "freeai.files.excludeGlobs": {
           "type": "array",
@@ -140,6 +151,17 @@
           "default": 6000,
           "minimum": 1000,
           "description": "Maximum context size for inline completion."
+        },
+        "freeai.autocomplete.timeoutMs": {
+          "type": "number",
+          "default": 4500,
+          "minimum": 500,
+          "description": "Maximum time to wait for inline completion."
+        },
+        "freeai.dev.mockResponses": {
+          "type": "boolean",
+          "default": false,
+          "description": "Return a local mock assistant response from chat without contacting a provider."
         }
       }
     }
@@ -147,8 +169,8 @@
   "scripts": {
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "lint": "eslint src --ext ts",
-    "test": "echo \"Tests are not implemented yet\"",
+    "lint": "tsc -p ./ --noEmit",
+    "test": "npm run compile && node out/test/runTests.js",
     "package": "vsce package --allow-missing-repository"
   },
   "devDependencies": {

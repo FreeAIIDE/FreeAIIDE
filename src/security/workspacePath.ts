@@ -1,7 +1,8 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { isExcludedPath } from './exclusions';
-import { isSensitivePath, toPosix } from './sensitiveFiles';
+import { isSensitivePath } from './sensitiveFiles';
+import { normalizeWorkspaceRelativePath } from './pathValidation';
 
 export interface ResolvedWorkspacePath {
   workspaceFolder: vscode.WorkspaceFolder;
@@ -18,14 +19,7 @@ export function getPrimaryWorkspaceFolder(): vscode.WorkspaceFolder {
 }
 
 export function resolveWorkspacePath(inputPath: string, options: { allowMissing?: boolean } = {}): ResolvedWorkspacePath {
-  if (!inputPath || path.isAbsolute(inputPath)) {
-    throw new Error('Path must be workspace-relative.');
-  }
-
-  const normalized = path.posix.normalize(toPosix(inputPath));
-  if (normalized === '.' || normalized.startsWith('../') || normalized === '..') {
-    throw new Error('Path traversal is not allowed.');
-  }
+  const normalized = normalizeWorkspaceRelativePath(inputPath);
   if (isSensitivePath(normalized)) {
     throw new Error('Sensitive files are blocked by default.');
   }

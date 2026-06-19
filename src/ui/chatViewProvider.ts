@@ -34,6 +34,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
         path: parsed.result.path,
         summary: parsed.result.summary ?? 'Proposed edit'
       });
+      void this.patchManager.showDiff(parsed.result.proposalId);
     }
   }
 

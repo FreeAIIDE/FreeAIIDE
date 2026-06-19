@@ -4,9 +4,13 @@ import { getOpenAICompatibleApiKey } from '../config/secrets';
 import { AIProvider } from './types';
 import { OllamaProvider } from './ollamaProvider';
 import { OpenAICompatibleProvider } from './openAICompatibleProvider';
+import { MockProvider } from './mockProvider';
 
 export async function createProvider(context: vscode.ExtensionContext): Promise<AIProvider> {
   const settings = getSettings();
+  if (settings.mockResponses) {
+    return new MockProvider();
+  }
   if (settings.provider === 'openai-compatible') {
     return new OpenAICompatibleProvider({
       baseUrl: settings.openAIBaseUrl,

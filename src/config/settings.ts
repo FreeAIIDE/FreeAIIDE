@@ -9,10 +9,14 @@ export interface FreeAISettings {
   openAIBaseUrl: string;
   openAIModel: string;
   maxContextChars: number;
+  warnBeforeCloud: boolean;
   maxToolCalls: number;
+  maxReadBytes: number;
   excludeGlobs: string[];
   autocompleteEnabled: boolean;
   autocompleteMaxChars: number;
+  autocompleteTimeoutMs: number;
+  mockResponses: boolean;
 }
 
 export function getSettings(): FreeAISettings {
@@ -24,9 +28,13 @@ export function getSettings(): FreeAISettings {
     openAIBaseUrl: config.get<string>('openai.baseUrl', ''),
     openAIModel: config.get<string>('openai.model', ''),
     maxContextChars: config.get<number>('context.maxChars', 24000),
+    warnBeforeCloud: config.get<boolean>('context.warnBeforeCloud', true),
     maxToolCalls: config.get<number>('tools.maxToolCalls', 8),
+    maxReadBytes: config.get<number>('files.maxReadBytes', 262144),
     excludeGlobs: config.get<string[]>('files.excludeGlobs', []),
     autocompleteEnabled: config.get<boolean>('autocomplete.enabled', false),
-    autocompleteMaxChars: config.get<number>('autocomplete.maxChars', 6000)
+    autocompleteMaxChars: config.get<number>('autocomplete.maxChars', 6000),
+    autocompleteTimeoutMs: config.get<number>('autocomplete.timeoutMs', 4500),
+    mockResponses: config.get<boolean>('dev.mockResponses', false)
   };
 }

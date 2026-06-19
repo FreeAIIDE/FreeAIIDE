@@ -40,12 +40,12 @@ Acceptance criteria:
 - [x] Implement user message rendering.
 - [x] Implement assistant message rendering.
 - [x] Implement streaming chunk updates.
-- [ ] Add mock assistant response.
+- [x] Add mock assistant response.
 
 Acceptance criteria:
 
 - [x] User can send a message.
-- [ ] Mock assistant response appears.
+- [x] Mock assistant response appears.
 - [x] UI is ready for streaming.
 
 ## Phase 3 — Ollama Provider
@@ -114,14 +114,14 @@ Acceptance criteria:
 
 - [x] Implement `propose_edit`.
 - [x] Implement patch manager.
-- [ ] Show diff preview.
+- [x] Show diff preview.
 - [x] Ask user for confirmation.
 - [x] Implement `apply_edit`.
 - [x] Use WorkspaceEdit.
 
 Acceptance criteria:
 
-- [ ] Diff is shown before edit.
+- [x] Diff is shown before edit.
 - [x] Edit applies only after approval.
 - [x] User can reject edits.
 
@@ -132,7 +132,7 @@ Acceptance criteria:
 - [x] Add API key command.
 - [x] Add provider selection command.
 - [x] Add model setting command.
-- [ ] Add cloud context warning.
+- [x] Add cloud context warning.
 
 Acceptance criteria:
 
@@ -142,32 +142,32 @@ Acceptance criteria:
 
 ## Phase 9 — Settings and UX
 
-- [ ] Add all configuration entries.
-- [ ] Add status indicator.
-- [ ] Add provider test command.
-- [ ] Improve error messages.
-- [ ] Update README.
+- [x] Add all configuration entries.
+- [x] Add status indicator.
+- [x] Add provider test command.
+- [x] Improve error messages.
+- [x] Update README.
 
 Acceptance criteria:
 
-- [ ] User can configure provider and model.
-- [ ] User can test provider.
-- [ ] Setup instructions are clear.
+- [x] User can configure provider and model.
+- [x] User can test provider.
+- [x] Setup instructions are clear.
 
 ## Phase 10 — Security Tests
 
-- [ ] Test path traversal.
-- [ ] Test sensitive file blocking.
-- [ ] Test excluded directories.
-- [ ] Test read_file line ranges.
-- [ ] Test tool parser.
-- [ ] Test context truncation.
+- [x] Test path traversal.
+- [x] Test sensitive file blocking.
+- [x] Test excluded directories.
+- [x] Test read_file line ranges.
+- [x] Test tool parser.
+- [x] Test context truncation.
 
 Acceptance criteria:
 
-- [ ] Security tests pass.
-- [ ] Tool tests pass.
-- [ ] Parser tests pass.
+- [x] Security tests pass.
+- [x] Tool tests pass.
+- [x] Parser tests pass.
 
 ## Phase 11 — Packaging
 
@@ -185,26 +185,26 @@ Acceptance criteria:
 
 ## Phase 12 — Inline Completion
 
-- [ ] Implement inline completion provider.
-- [ ] Add enable/disable setting.
-- [ ] Add completion prompt.
-- [ ] Add latency guard.
+- [x] Implement inline completion provider.
+- [x] Add enable/disable setting.
+- [x] Add completion prompt.
+- [x] Add latency guard.
 
 Acceptance criteria:
 
-- [ ] Inline suggestions appear.
-- [ ] Feature can be disabled.
+- [x] Inline suggestions appear.
+- [x] Feature can be disabled.
 
 ## Phase 13 — Code - OSS Fork Plan
 
 - [ ] Clone Code - OSS.
-- [ ] Identify branding files.
-- [ ] Configure product metadata.
-- [ ] Bundle extension.
+- [x] Identify branding files.
+- [x] Configure product metadata.
+- [x] Bundle extension.
 - [ ] Build macOS app.
-- [ ] Document license boundaries.
+- [x] Document license boundaries.
 
 Acceptance criteria:
 
-- [ ] Standalone fork plan is documented.
-- [ ] Product does not use official VS Code branding.
+- [x] Standalone fork plan is documented.
+- [x] Product does not use official VS Code branding.

@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
+import { ensureCloudContextAllowed } from '../config/cloudWarning';
 import { clearOpenAICompatibleApiKey, setOpenAICompatibleApiKey } from '../config/secrets';
+import { createProvider } from '../providers/providerFactory';
 
 export function registerConfigCommands(context: vscode.ExtensionContext): vscode.Disposable[] {
   return [
@@ -18,6 +20,9 @@ export function registerConfigCommands(context: vscode.ExtensionContext): vscode
       const provider = await vscode.window.showQuickPick(['ollama', 'openai-compatible'], { placeHolder: 'Select FreeAI provider' });
       if (provider) {
         await vscode.workspace.getConfiguration('freeai').update('provider', provider, vscode.ConfigurationTarget.Global);
+        if (provider === 'openai-compatible') {
+          await ensureCloudContextAllowed(context);
+        }
       }
     }),
     vscode.commands.registerCommand('freeai.setModel', async () => {
@@ -30,7 +35,29 @@ export function registerConfigCommands(context: vscode.ExtensionContext): vscode
       }
     }),
     vscode.commands.registerCommand('freeai.testProvider', async () => {
-      vscode.window.showInformationMessage('FreeAI provider test: open the chat and send a short message.');
+      if (!(await ensureCloudContextAllowed(context))) {
+        return;
+      }
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+      try {
+        const provider = await createProvider(context);
+        let response = '';
+        for await (const chunk of provider.streamChat({
+          messages: [{ role: 'user', content: 'Reply with: FreeAI provider OK' }],
+          signal: controller.signal
+        })) {
+          response += chunk;
+          if (response.length > 80) {
+            break;
+          }
+        }
+        vscode.window.showInformationMessage(`FreeAI provider OK: ${provider.name}`);
+      } catch (error) {
+        vscode.window.showErrorMessage(error instanceof Error ? error.message : String(error));
+      } finally {
+        clearTimeout(timeout);
+      }
     }),
     vscode.commands.registerCommand('freeai.toggleAutocomplete', async () => {
       const config = vscode.workspace.getConfiguration('freeai');

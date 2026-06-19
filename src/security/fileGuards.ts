@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
+import { getSettings } from '../config/settings';
 
 export const MAX_READ_BYTES = 256 * 1024;
 
-export async function ensureReadableTextFile(uri: vscode.Uri, maxBytes = MAX_READ_BYTES): Promise<void> {
+export async function ensureReadableTextFile(uri: vscode.Uri, maxBytes = getSettings().maxReadBytes || MAX_READ_BYTES): Promise<void> {
   const stat = await vscode.workspace.fs.stat(uri);
   if (stat.type !== vscode.FileType.File) {
     throw new Error('Path is not a file.');
