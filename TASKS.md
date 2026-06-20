@@ -197,7 +197,7 @@ Acceptance criteria:
 
 ## Phase 13 — Code - OSS Fork Plan
 
-- [ ] Clone Code - OSS.
+- [x] Clone Code - OSS.
 - [x] Identify branding files.
 - [x] Configure product metadata.
 - [x] Bundle extension.

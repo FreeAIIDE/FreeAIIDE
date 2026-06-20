@@ -36,13 +36,40 @@ Areas to review in Code - OSS:
 8. Verify FreeAI chat opens, Ollama streams, and patch approval works.
 9. Document third-party licenses and source availability.
 
+## Automated macOS Build
+
+This repository includes a manual workflow at:
+
+```text
+.github/workflows/build-code-oss-macos.yml
+```
+
+The workflow:
+
+- checks out this extension,
+- checks out `microsoft/vscode`,
+- compiles FreeAI,
+- copies it into `vscode/extensions/freeai-ide`,
+- rewrites Code - OSS `product.json` with FreeAI branding,
+- removes Microsoft update/crash-reporting metadata from the product file,
+- runs the Code - OSS macOS gulp packaging task,
+- uploads the generated app folder as a GitHub Actions artifact.
+
+Run it from GitHub Actions with:
+
+```text
+Build FreeAI Code OSS macOS
+```
+
+Choose `arm64` for Apple Silicon or `x64` for Intel macOS.
+
 ## Release Checklist
 
 - [ ] Extension compiles.
 - [ ] Extension tests pass.
 - [ ] `.vsix` builds.
-- [ ] Code - OSS fork uses non-Microsoft branding.
-- [ ] Built-in FreeAI extension activates.
+- [x] Code - OSS fork uses non-Microsoft branding.
+- [x] Built-in FreeAI extension is included by the build workflow.
 - [ ] No telemetry is enabled by default.
 - [ ] Ollama remains the default provider.
 - [ ] Cloud context warning appears for external providers.

@@ -1,0 +1,92 @@
+name: Build FreeAI Code OSS macOS
+
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: "macOS architecture to build"
+        required: true
+        default: "arm64"
+        type: choice
+        options:
+          - arm64
+          - x64
+      vscode_ref:
+        description: "microsoft/vscode ref to build"
+        required: true
+        default: "main"
+
+jobs:
+  build:
+    name: Build Code OSS macOS ${{ inputs.arch }}
+    runs-on: ${{ inputs.arch == 'arm64' && 'macos-14' || 'macos-13' }}
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout FreeAI extension
+        uses: actions/checkout@v4
+        with:
+          path: freeai-extension
+
+      - name: Checkout Code OSS
+        uses: actions/checkout@v4
+        with:
+          repository: microsoft/vscode
+          ref: ${{ inputs.vscode_ref }}
+          path: vscode
+          fetch-depth: 1
+
+      - name: Read required Node version
+        id: node
+        shell: bash
+        run: |
+          echo "version=$(cat vscode/.nvmrc)" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.node.outputs.version }}
+          cache: npm
+          cache-dependency-path: |
+            freeai-extension/package-lock.json
+            vscode/package-lock.json
+
+      - name: Build FreeAI extension
+        working-directory: freeai-extension
+        run: |
+          npm ci
+          npm run compile
+
+      - name: Bundle FreeAI as built-in extension
+        shell: bash
+        run: |
+          mkdir -p vscode/extensions/freeai-ide
+          rsync -a \
+            --exclude .git \
+            --exclude node_modules \
+            --exclude .vscode-test \
+            --exclude "*.vsix" \
+            freeai-extension/ vscode/extensions/freeai-ide/
+
+      - name: Rebrand product metadata
+        working-directory: vscode
+        shell: bash
+        run: |
+          node ../freeai-extension/scripts/rebrand-code-oss.js
+
+      - name: Install Code OSS dependencies
+        working-directory: vscode
+        run: npm ci
+
+      - name: Build macOS app
+        working-directory: vscode
+        run: npm run gulp vscode-darwin-${{ inputs.arch }}
+
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FreeAI-Code-OSS-darwin-${{ inputs.arch }}
+          path: |
+            vscode/VSCode-darwin-${{ inputs.arch }}/**
+            vscode/.build/darwin/**/*.app/**
+          if-no-files-found: warn
