@@ -16,6 +16,9 @@ on:
         required: true
         default: "main"
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build Code OSS macOS ${{ inputs.arch }}
@@ -76,10 +79,14 @@ jobs:
 
       - name: Install Code OSS dependencies
         working-directory: vscode
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm ci
 
       - name: Build macOS app
         working-directory: vscode
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run gulp vscode-darwin-${{ inputs.arch }}
 
       - name: Upload app artifact
