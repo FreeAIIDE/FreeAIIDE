@@ -15,20 +15,7 @@ Object.assign(product, {
   urlProtocol: 'freeai-ide',
   extensionEnabledApiProposals: {
     ...product.extensionEnabledApiProposals
-  },
-  builtInExtensions: [
-    ...(product.builtInExtensions ?? []),
-    {
-      name: 'freeai-ide',
-      version: '0.0.1',
-      repo: 'https://github.com/FreeAIIDE/FreeAIIDE',
-      metadata: {
-        id: 'freeai.freeai-ide',
-        publisherId: 'freeai',
-        publisherDisplayName: 'FreeAIIDE'
-      }
-    }
-  ]
+  }
 });
 
 delete product.quality;
